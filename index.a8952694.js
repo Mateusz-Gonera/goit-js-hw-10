@@ -1,0 +1,2 @@
+!function(){var o;(o="sweden",fetch("https://restcountries.com/v3.1/name/".concat(o,"?fields=name,capital,population,flags,languages")).then((function(o){if(o.ok)return o.json();throw new Error(o.status)}))).then((function(o){console.log(o[0].flags.svg),console.log(o[0].name.official),console.log(o[0].capital[0]),console.log(o[0].population);var n=o[0].languages;console.log(Object.values(n).join(", "))}))}();
+//# sourceMappingURL=index.a8952694.js.map
