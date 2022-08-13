@@ -60,7 +60,7 @@ input.addEventListener(
       countryList.innerHTML = '';
       countryInfo.innerHTML = '';
       return;
-    };
+    }
     return fetchCountries(trimInput)
       .then(countries => {
         if (countries.length > 10) {
