@@ -1,5 +1,5 @@
 import './css/styles.css';
-import { fetchCountries } from './fetchCountries';
+import { fetchCountries, fetchCountries } from './fetchCountries';
 import debounce from 'lodash.debounce';
 import Notiflix from 'notiflix';
 
@@ -54,39 +54,65 @@ const renderList = countries => {
 
 input.addEventListener(
   'input',
-  debounce(event => {
+  debounce(async event => {
     let trimInput = input.value.trim();
     if (trimInput === '') {
       countryList.innerHTML = '';
       countryInfo.innerHTML = '';
       return;
     }
-    return fetchCountries(trimInput)
-      .then(countries => {
-        if (countries.length > 10) {
-          Notiflix.Notify.info(
-            'Too many matches found. Please enter a more specific name.',
-            { width: '35vw', timeout: 2000 }
-          );
-          countryList.innerHTML = '';
-          countryInfo.innerHTML = '';
-        }
-        if (countries.length <= 10 && countries.length >= 2) {
-          countryInfo.innerHTML = '';
-          renderList(countries);
-        }
-        if (countries.length === 1) {
-          countryList.innerHTML = '';
-          renderInfo(countries);
-        }
-      })
-      .catch(error => {
+    try {
+      const fetchCountriesVariable = await fetchCountries(trimInput);
+      if (fetchCountriesVariable.length > 10) {
+        Notiflix.Notify.info(
+          'Too many matches found. Please enter a more specific name.',
+          { width: '35vw', timeout: 2000 }
+        );
         countryList.innerHTML = '';
         countryInfo.innerHTML = '';
-        Notiflix.Notify.failure('Oops, there is no country with that name', {
-          width: '35vw',
-          timeout: 2000,
-        });
+      }
+      if (fetchCountriesVariable.length <= 10 && fetchCountriesVariable.length >= 2) {
+        countryInfo.innerHTML = '';
+        renderList(fetchCountriesVariable);
+      }
+      if (fetchCountriesVariable.length === 1) {
+        countryList.innerHTML = '';
+        renderInfo(fetchCountriesVariable);
+      }
+    } catch (error) {
+      countryList.innerHTML = '';
+      countryInfo.innerHTML = '';
+      Notiflix.Notify.failure('Oops, there is no country with that name', {
+        width: '35vw',
+        timeout: 2000,
       });
+    }
+    // return fetchCountries(trimInput)
+    //   .then(countries => {
+    //     if (countries.length > 10) {
+    //       Notiflix.Notify.info(
+    //         'Too many matches found. Please enter a more specific name.',
+    //         { width: '35vw', timeout: 2000 }
+    //       );
+    //       countryList.innerHTML = '';
+    //       countryInfo.innerHTML = '';
+    //     }
+    //     if (countries.length <= 10 && countries.length >= 2) {
+    //       countryInfo.innerHTML = '';
+    //       renderList(countries);
+    //     }
+    //     if (countries.length === 1) {
+    //       countryList.innerHTML = '';
+    //       renderInfo(countries);
+    //     }
+    //   })
+    //   .catch(error => {
+    //     countryList.innerHTML = '';
+    //     countryInfo.innerHTML = '';
+    //     Notiflix.Notify.failure('Oops, there is no country with that name', {
+    //       width: '35vw',
+    //       timeout: 2000,
+    //     });
+    //   });
   }, DEBOUNCE_DELAY)
 );
