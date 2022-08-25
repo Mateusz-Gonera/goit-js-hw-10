@@ -55,13 +55,13 @@ const renderList = countries => {
 input.addEventListener(
   'input',
   debounce(async event => {
-    let trimInput = input.value.trim();
-    if (trimInput === '') {
-      countryList.innerHTML = '';
-      countryInfo.innerHTML = '';
-      return;
-    }
     try {
+      let trimInput = input.value.trim();
+      if (trimInput === '') {
+        countryList.innerHTML = '';
+        countryInfo.innerHTML = '';
+        return;
+      }
       const fetchCountriesVariable = await fetchCountries(trimInput);
       if (fetchCountriesVariable.length > 10) {
         Notiflix.Notify.info(
@@ -71,7 +71,10 @@ input.addEventListener(
         countryList.innerHTML = '';
         countryInfo.innerHTML = '';
       }
-      if (fetchCountriesVariable.length <= 10 && fetchCountriesVariable.length >= 2) {
+      if (
+        fetchCountriesVariable.length <= 10 &&
+        fetchCountriesVariable.length >= 2
+      ) {
         countryInfo.innerHTML = '';
         renderList(fetchCountriesVariable);
       }
